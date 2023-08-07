@@ -23,6 +23,7 @@ Route::inertia('/', 'Home');
 
 // Team route
 Route::get('/team', [TeamController::class, 'show'])->name('team');
+Route::post('/team', [TeamController::class, 'create'])->name('team.post');
 
 // Match route
 Route::get('/match', [MatchController::class, 'show'])->name('match');

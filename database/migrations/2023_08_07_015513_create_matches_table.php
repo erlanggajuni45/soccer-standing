@@ -18,6 +18,8 @@ return new class extends Migration
             $table->integer('home_score');
             $table->integer('away_score');
 
+            $table->unique(['home_team_id', 'away_team_id']);
+
             $table->foreign('home_team_id')->references('id')->on('teams')->onDelete('cascade');
             $table->foreign('away_team_id')->references('id')->on('teams')->onDelete('cascade');
         });

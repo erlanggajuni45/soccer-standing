@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\teams;
+use App\Models\standings;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -32,7 +33,19 @@ class TeamController extends Controller
 
         $validator = Validator::make($req->all(), $rules, $messages)->validate();
 
-        teams::create($validator);
+        $result = teams::create($validator);
+
+        $dataStandings = [
+            'team_id' => $result->id,
+            'total_matches' => 0,
+            'wins' => 0,
+            'draws' => 0,
+            'loses' => 0,
+            'goals_scored' => 0,
+            'goals_against' => 0,
+        ];
+
+        standings::create($dataStandings);
 
         return Redirect::route('team.post');
     }

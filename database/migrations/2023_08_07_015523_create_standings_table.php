@@ -15,8 +15,12 @@ return new class extends Migration
             $table->string('id', 50)->primary();
             $table->string('team_id', 50);
             $table->integer('total_matches');
+            $table->integer('wins');
+            $table->integer('draws');
+            $table->integer('loses');
             $table->integer('goals_scored');
             $table->integer('goals_against');
+            $table->integer('points');
 
             $table->foreign('team_id')->references('id')->on('teams')->onDelete('cascade');
         });

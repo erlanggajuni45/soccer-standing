@@ -32,4 +32,9 @@ class teams extends Model
     {
         return $this->hasMany(matches::class, 'away_team_id', 'id');
     }
+
+    public function standing()
+    {
+        return $this->hasOne(standings::class, 'team_id', 'id');
+    }
 }

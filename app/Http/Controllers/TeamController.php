@@ -6,7 +6,6 @@ use App\Models\teams;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Redirect;
 
 
@@ -25,8 +24,10 @@ class TeamController extends Controller
 
         $messages = [
             'name.required' => 'Mohon isi kolom nama klub',
+            'name.max' => 'Nama klub tidak boleh lebih dari 100 karakter',
             'city.required' => 'Mohon isi kolom kota klub',
-            'unique' => 'Nama dan kota klub sudah ada!',
+            'city.max' => 'Kota klub tidak boleh lebih dari 50 karakter',
+            'unique' => 'Nama dan kota klub sudah ada',
         ];
 
         $validator = Validator::make($req->all(), $rules, $messages)->validate();

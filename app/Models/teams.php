@@ -23,7 +23,13 @@ class teams extends Model
         });
     }
 
-    public function match() {
-        return $this->hasOne(matches::class);
+    public function homeMatches()
+    {
+        return $this->hasMany(matches::class, 'home_team_id', 'id');
+    }
+
+    public function awayMatches()
+    {
+        return $this->hasMany(matches::class, 'away_team_id', 'id');
     }
 }

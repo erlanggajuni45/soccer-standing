@@ -27,6 +27,7 @@ Route::post('/team', [TeamController::class, 'create'])->name('team.post');
 
 // Match route
 Route::get('/match', [MatchController::class, 'show'])->name('match');
+Route::post('/match', [MatchController::class, 'create'])->name('match.post');
 
 // Standing route
 Route::get('/standing', [StandingController::class, 'show'])->name('standing');

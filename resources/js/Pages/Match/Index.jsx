@@ -8,7 +8,7 @@ import { useCallback, useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
 export default function Match({teams}) {
-    const {data, setData, processing, reset, errors, post, recentlySuccessful} = useForm([
+    const {data, setData, processing, transform, reset, errors, post, recentlySuccessful} = useForm([
         {
             home_team_id: '',
             away_team_id: '',
@@ -16,21 +16,26 @@ export default function Match({teams}) {
             away_score: '',
         }
     ]);
+
     const [active, setActive] = useState('one')
 
     const submit = useCallback((e) => {
         e.preventDefault(e)
+        transform(() => ([...data]))
         post(route('match.post'), {
             onError: (err) => {
                 if (err.unique) {
-                    Swal.fire('Gagal', err.unique, 'warning')
+                    Swal.fire(
+                        'Gagal',
+                        `${err.unique}${active != 'one' ? ` di baris ${err.index+1}`: ''}`,
+                        'warning'
+                    )
                 }
             }
         })
-    }, [])
+    }, [data])
 
     useEffect(() => {
-        reset()
         if (active === 'one') {
             const firstData = data[0];
             setData([firstData])
@@ -46,6 +51,7 @@ export default function Match({teams}) {
 
     useEffect(() => {
         if (recentlySuccessful) {
+            reset()
             Swal.fire('Berhasil',`Input pertandingan berhasil`, 'success')
             setData([
                 {
@@ -55,6 +61,12 @@ export default function Match({teams}) {
                     away_score: '',
                 }
             ])
+            if (active == "mutiple") setData(prevData => [...prevData, {
+                home_team_id: '',
+                away_team_id: '',
+                home_score: '',
+                away_score: '',
+            }])
         }
     }, [recentlySuccessful])
 
@@ -170,29 +182,87 @@ export default function Match({teams}) {
                                 <>
                                     {data.map((input, idx) => {
                                         return(
+                                            <>
                                             <div key={idx} className="flex flex-nowrap">
-                                                <select name="team-1" value={data[idx].home_team_id} className="basis-1/3 my-auto">
-                                                    <option value="" disabled>Klub 1</option>
-                                                    {teams.map(team => {
-                                                        return(
-                                                            <option key={team.id} value={team.id}>{team.name} - {team.city}</option>
-                                                        )
-                                                    })}
-                                                </select>
+                                                <div className="flex flex-col">
+                                                    <SelectInput
+                                                        name="home_team_id"
+                                                        value={data[idx].home_team_id}
+                                                        onChange={changeInput}
+                                                        data-index={idx}
+                                                        className="basis-1/4 w-48 my-auto"
+                                                    >
+                                                        <option value="" disabled>Klub {(idx+1+idx)}</option>
+                                                        {teams.map(team => {
+                                                            return(
+                                                                <option key={team.id} value={team.id}>{team.name} - {team.city}</option>
+                                                            )
+                                                        })}
+                                                    </SelectInput>
+                                                    {errors.index === idx && <InputError message={errors.home_team_id} />}
+                                                </div>
+
                                                 <span className="py-2 px-4"> - </span>
-                                                <select value={data[0].away_team_id} className="basis-1/3 my-auto">
-                                                    <option value="" disabled>Klub 2</option>
-                                                    {teams.map(team => {
-                                                        return (
-                                                            <option key={team.id} value={team.id}>{team.name} - {team.city}</option>
-                                                        )
-                                                    })}
-                                                </select>
-                                            {/* <InputError message={errors.name} /> */}
+
+                                                <div className="flex flex-col">
+                                                    <SelectInput
+                                                        name="away_team_id" value={data[idx].away_team_id}
+                                                        onChange={changeInput}
+                                                        data-index={idx}
+                                                        className="basis-1/4 w-48 my-auto"
+                                                    >
+                                                        <option value="" disabled>Klub {(idx+2+idx)}</option>
+                                                        {teams.map(team => {
+                                                            return (
+                                                                <option key={team.id} value={team.id}>{team.name} - {team.city}</option>
+                                                            )
+                                                        })}
+                                                    </SelectInput>
+                                                    {errors.index === idx &&  <InputError message={errors.away_team_id} />}
+                                                </div>
+                                                <div className="flex flex-col ml-16">
+                                                    <TextInput
+                                                        type="number"
+                                                        min="0"
+                                                        name="home_score"
+                                                        data-index={idx}
+                                                        className="basis-1/3 w-48 my-auto"
+                                                        placeholder={`Skor klub ${(idx+1+idx)}`}
+                                                        onChange={changeInput}
+                                                        value={data[idx].home_score}
+                                                    />
+                                                    {errors.index === idx && <InputError message={errors.home_score} />}
+                                                </div>
+                                                    <span className="py-2 px-4"> - </span>
+                                                <div className="flex flex-col">
+                                                    <TextInput
+                                                        type="number"
+                                                        min="0"
+                                                        name="away_score"
+                                                        data-index={idx}
+                                                        className="basis-1/3 w-48 my-auto"
+                                                        placeholder={`Skor klub ${(idx+2+idx)}`}
+                                                        onChange={changeInput}
+                                                        value={data[idx].away_score}
+                                                    />
+                                                {errors.index === idx && <InputError message={errors.away_score} />}
+                                                </div>
                                             </div>
-                                           )
-                                        }
+                                            </>
+                                        )}
                                     )}
+                                <button
+                                    disabled={processing}
+                                    type="button"
+                                    className="py-1 px-4 m-0 rounded-md text-white w-24 block bg-green-400"
+                                    onClick={() => setData((prevData) => [...prevData, {
+                                        home_team_id: '',
+                                        away_team_id: '',
+                                        home_score: '',
+                                        away_score: '',
+                                    }]
+                                )}>Add</button>
+                                <button disabled={processing} className="py-1 px-4 m-0 rounded-md text-white w-24 block bg-gray-800">Save</button>
                                 </>
                             )}
                             </form>

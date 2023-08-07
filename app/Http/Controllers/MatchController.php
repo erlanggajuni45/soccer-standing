@@ -37,6 +37,8 @@ class MatchController extends Controller
             'min' => 'Skor tidak boleh kurang dari 0',
         ];
 
+        $unique_matches = [];
+
         foreach ($req->all() as $index => $data) {
             $validator = Validator::make($data, $rules, $messages);
             if ($validator->fails()) {
@@ -44,12 +46,19 @@ class MatchController extends Controller
                 $errors->add('index', $index);
                 return redirect()->back()->withErrors($errors);
             } else {
+                $uniqueKey = $data['home_team_id'] . $data['away_team_id'];
+
                 $isExist = matches::where('home_team_id', $data['home_team_id'])
                                 ->where('away_team_id', $data['away_team_id'])
                                 ->count();
-                if ($isExist > 0) {
-                    return redirect()->back()->withErrors(['unique' => 'Pertandingan sudah ada']);
+                if ($isExist > 0 || in_array($uniqueKey, $unique_matches)) {
+                    return redirect()->back()->withErrors([
+                        'unique' => 'Pertandingan sudah ada',
+                        'index' => $index,
+                    ]);
                 }
+
+                $unique_matches[] = $uniqueKey;
             }
         }
 

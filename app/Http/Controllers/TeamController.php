@@ -28,7 +28,7 @@ class TeamController extends Controller
             'name.max' => 'Nama klub tidak boleh lebih dari 100 karakter',
             'city.required' => 'Mohon isi kota klub',
             'city.max' => 'Kota klub tidak boleh lebih dari 50 karakter',
-            'unique' => 'Kombinasi nama dan kota klub sudah ada',
+            'unique' => 'Nama dan kota klub sudah ada',
         ];
 
         $validator = Validator::make($req->all(), $rules, $messages)->validate();

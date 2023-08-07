@@ -120,7 +120,7 @@ export default function Match({teams}) {
                                                 <option value="" disabled>Klub 1</option>
                                                 {teams.map(team => {
                                                     return(
-                                                        <option key={team.id} value={team.id}>{team.name} - {team.city}</option>
+                                                        <option key={team.id} value={team.id}>{team.name}</option>
                                                     )
                                                 })}
                                             </SelectInput>
@@ -139,7 +139,7 @@ export default function Match({teams}) {
                                                 <option value="" disabled>Klub 2</option>
                                                 {teams.map(team => {
                                                     return (
-                                                        <option key={team.id} value={team.id}>{team.name} - {team.city}</option>
+                                                        <option key={team.id} value={team.id}>{team.name}</option>
                                                     )
                                                 })}
                                             </SelectInput>
@@ -195,7 +195,7 @@ export default function Match({teams}) {
                                                         <option value="" disabled>Klub {(idx+1+idx)}</option>
                                                         {teams.map(team => {
                                                             return(
-                                                                <option key={team.id} value={team.id}>{team.name} - {team.city}</option>
+                                                                <option key={team.id} value={team.id}>{team.name}</option>
                                                             )
                                                         })}
                                                     </SelectInput>
@@ -214,7 +214,7 @@ export default function Match({teams}) {
                                                         <option value="" disabled>Klub {(idx+2+idx)}</option>
                                                         {teams.map(team => {
                                                             return (
-                                                                <option key={team.id} value={team.id}>{team.name} - {team.city}</option>
+                                                                <option key={team.id} value={team.id}>{team.name}</option>
                                                             )
                                                         })}
                                                     </SelectInput>

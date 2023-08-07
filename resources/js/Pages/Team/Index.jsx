@@ -37,13 +37,13 @@ export default function Team() {
                                     <InputLabel value="Nama Klub" htmlFor="name" className="basis-1/4 my-auto" />
                                     <TextInput id="name" value={data.name} className="mt-1 basis-3/4" onChange={(e) => setData('name', e.target.value)} />
                                 </div>
-                                <InputError message={errors.name} />
+                                {errors.name != errors.city && <InputError message={errors.name} />}
                                 <div className="flex flex-nowrap">
                                     <InputLabel value="Kota Klub" htmlFor="city" className="basis-1/4 my-auto" />
                                     <TextInput id="city" value={data.city} className="mt-1 basis-3/4" onChange={(e) => setData('city', e.target.value)} />
                                 </div>
                                 <InputError message={errors.city} />
-                                <Button disabled={processing}>Submit</Button>
+                                <Button disabled={processing}>SAVE</Button>
                             </form>
                         </section>
                     </div>

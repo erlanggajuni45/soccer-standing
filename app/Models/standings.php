@@ -20,6 +20,7 @@ class standings extends Model
         'loses',
         'goals_scored',
         'goals_against',
+        'points',
     ];
 
     public $timestamps = false;

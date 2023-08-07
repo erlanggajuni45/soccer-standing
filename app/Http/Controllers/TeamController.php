@@ -24,11 +24,11 @@ class TeamController extends Controller
 
 
         $messages = [
-            'name.required' => 'Mohon isi kolom nama klub',
+            'name.required' => 'Mohon isi nama klub',
             'name.max' => 'Nama klub tidak boleh lebih dari 100 karakter',
-            'city.required' => 'Mohon isi kolom kota klub',
+            'city.required' => 'Mohon isi kota klub',
             'city.max' => 'Kota klub tidak boleh lebih dari 50 karakter',
-            'unique' => 'Nama dan kota klub sudah ada',
+            'unique' => 'Kombinasi nama dan kota klub sudah ada',
         ];
 
         $validator = Validator::make($req->all(), $rules, $messages)->validate();
@@ -43,6 +43,7 @@ class TeamController extends Controller
             'loses' => 0,
             'goals_scored' => 0,
             'goals_against' => 0,
+            'points' => 0,
         ];
 
         standings::create($dataStandings);

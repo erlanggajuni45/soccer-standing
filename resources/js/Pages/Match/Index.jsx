@@ -1,11 +1,11 @@
 import Button from "@/Components/Button";
 import InputError from "@/Components/InputError";
-import InputLabel from "@/Components/InputLabel";
 import SelectInput from "@/Components/SelectInput";
 import TextInput from "@/Components/TextInput";
 import Layout from "@/Layouts/Layout";
 import { Head, useForm } from "@inertiajs/react";
 import { useCallback, useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 export default function Match({teams}) {
     const {data, setData, processing, reset, errors, post, recentlySuccessful} = useForm([
@@ -21,8 +21,11 @@ export default function Match({teams}) {
     const submit = useCallback((e) => {
         e.preventDefault(e)
         post(route('match.post'), {
-            onSuccess: (res) => console.log(res),
-            onError: (err) => console.log(err)
+            onError: (err) => {
+                if (err.unique) {
+                    Swal.fire('Gagal', err.unique, 'warning')
+                }
+            }
         })
     }, [])
 
@@ -40,6 +43,20 @@ export default function Match({teams}) {
             }])
         }
     }, [active])
+
+    useEffect(() => {
+        if (recentlySuccessful) {
+            Swal.fire('Berhasil',`Input pertandingan berhasil`, 'success')
+            setData([
+                {
+                    home_team_id: '',
+                    away_team_id: '',
+                    home_score: '',
+                    away_score: '',
+                }
+            ])
+        }
+    }, [recentlySuccessful])
 
     const changeInput = useCallback((e) => {
         const { value, dataset, name } = e.target
@@ -116,6 +133,7 @@ export default function Match({teams}) {
                                             </SelectInput>
                                             {errors.index === 0 &&  <InputError message={errors.away_team_id} />}
                                         </div>
+                                    <Button disabled={processing} className="basis 1/3 mx-4 py-2">Save</Button>
                                     </div>
                                     <div className="flex flex-nowrap">
                                         <div className="flex flex-col">
@@ -126,6 +144,8 @@ export default function Match({teams}) {
                                                 data-index={0}
                                                 className="basis-1/3 w-48 my-auto"
                                                 placeholder="Skor klub 1"
+                                                onChange={changeInput}
+                                                value={data[0].home_score}
                                             />
                                             {errors.index === 0 && <InputError message={errors.home_score} />}
                                         </div>
@@ -138,11 +158,12 @@ export default function Match({teams}) {
                                                 data-index={0}
                                                 className="basis-1/3 w-48 my-auto"
                                                 placeholder="Skor klub 2"
+                                                onChange={changeInput}
+                                                value={data[0].away_score}
                                             />
                                         {errors.index === 0 && <InputError message={errors.away_score} />}
                                         </div>
                                     </div>
-                                    <Button disabled={processing}>Submit</Button>
                                 </>
                             )}
                             {active ==='mutiple' && (
